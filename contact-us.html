@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combe90 - Contact Us</title>
+    {% load static %}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/styles.css' %}"
+    />
+    <style>
+      /* General Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      /* Header Styles */
+      header {
+        background-color: #ffffff;
+        padding: 10px 20px;
+        border-bottom: 1px solid #dddddd;
+      }
+
+      .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      header nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+      }
+
+      header nav ul li {
+        margin-left: 20px;
+      }
+
+      header nav ul li a {
+        color: #333;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      /* Breadcrumbs */
+      .breadcrumbs-custom {
+        padding: 30px 0;
+        color: white;
+        text-align: center;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .breadcrumbs-custom h2 {
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 300;
+      }
+
+      .breadcrumbs-custom ul {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0;
+        display: inline-block;
+      }
+
+      .breadcrumbs-custom ul li {
+        display: inline;
+        margin-right: 5px;
+      }
+
+      .breadcrumbs-custom ul li a {
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      .breadcrumbs-custom ul li.active {
+        color: #ffa500;
+      }
+
+      /* Get in Touch Section */
+      .section-xl {
+        padding: 60px 0;
+      }
+
+      .layout-bordered {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .layout-bordered__main {
+        flex: 2;
+        background-color: #ffffff;
+        padding: 30px;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .layout-bordered__aside {
+        flex: 1;
+        background-color: #ffffff;
+        padding: 30px;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-wrap {
+        margin-bottom: 20px;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .button-primary {
+        background-color: #ffa500;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .button-primary:hover {
+        background-color: #e69500;
+      }
+
+      /* Notification Styles */
+      .notification {
+        display: none;
+        background-color: #4caf50;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+
+      .notification.error {
+        background-color: #f44336;
+      }
+
+      /* Contact Details Aside */
+      .layout-bordered__aside-item {
+        margin-bottom: 20px;
+      }
+
+      .heading-8 {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .unit {
+        display: flex;
+        align-items: center;
+      }
+
+      .unit-left {
+        margin-right: 10px;
+      }
+
+      .unit-left .icon {
+        font-size: 20px;
+        color: #ffa500;
+      }
+
+      .unit-body a {
+        color: #333;
+        text-decoration: none;
+      }
+
+      .unit-body a:hover {
+        text-decoration: underline;
+      }
+
+      /* Footer Styles */
+      .footer-section {
+        padding: 40px 0;
+        background-color: #333;
+        color: white;
+      }
+
+      .footer-columns {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .footer-column {
+        flex: 1;
+        min-width: 250px;
+        margin-bottom: 20px;
+      }
+
+      .footer-column h4 {
+        margin-bottom: 15px;
+        color: #ffa500;
+      }
+
+      .footer-column ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .footer-column ul li {
+        margin-bottom: 10px;
+      }
+
+      .footer-column ul li a {
+        color: white;
+        text-decoration: none;
+      }
+
+      .footer-column ul li a:hover {
+        text-decoration: underline;
+      }
+
+      .social-icons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .snackbar {
+        display: none;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <img
+          src="{% static 'images/Combe90_logo.jpg' %}"
+          alt="Combe90 Logo"
+          class="logo"
+        />
+        <hr />
+        <!-- Hamburger menu -->
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+        <!-- Navigation menu -->
+        <nav>
+          <ul id="nav-menu">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about_us' %}">About Us</a></li>
+            <li><a href="{% url 'services' %}">Services</a></li>
+            <li><a href="{% url 'products' %}">Products</a></li>
+            <li>
+              <a href="{% url 'contact_us' %}" class="active">Contacts</a>
+            </li>
+            <li><a href="{% url 'admin_view' %}">Admin</a></li>
+            <li><a href="{% url 'cart' %}">Cart</a></li>
+            <li><a href="{% url 'quotation' %}">Quotation</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <section
+      class="breadcrumbs-custom bg-image"
+      style="
+        background-image: url('{% static 'images_previous_site/Combe-90-fuel-management-system-2.jpg' %}');
+      "
+    >
+      <div class="container">
+        <h2 class="breadcrumbs-custom__title">Contact Us</h2>
+        <ul class="breadcrumbs-custom__path">
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li class="active">Contact Us</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Get in Touch Section -->
+    <section class="section section-xl bg-default">
+      <div class="container">
+        <div class="layout-bordered">
+          <div class="layout-bordered__main text-center">
+            <div class="layout-bordered__main-inner">
+              <h3>Get in Touch</h3>
+
+              <!-- Contact Form -->
+              <form id="contactForm">
+                {% csrf_token %}
+                <div class="row align-items-md-end row-20">
+                  <div class="col-md-6">
+                    <div class="form-wrap">
+                      <input
+                        class="form-input"
+                        required
+                        id="contact-first-name"
+                        name="first_name"
+                        type="text"
+                      />
+                      <label class="form-label" for="contact-first-name"
+                        >First name</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-wrap">
+                      <input
+                        class="form-input"
+                        required
+                        id="contact-phone"
+                        name="phone"
+                        type="text"
+                      />
+                      <label class="form-label" for="contact-phone"
+                        >Phone</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-wrap">
+                      <label class="form-label" for="contact-message"
+                        >Your Message</label
+                      >
+                      <textarea
+                        class="form-input"
+                        required
+                        id="contact-message"
+                        name="message"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-wrap">
+                      <input
+                        class="form-input"
+                        required
+                        id="contact-email"
+                        name="email"
+                        type="email"
+                      />
+                      <label class="form-label" for="contact-email"
+                        >E-mail</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <button
+                      class="button button-block button-primary"
+                      type="submit"
+                    >
+                      Send Message
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+              <div class="notification" id="notification"></div>
+            </div>
+          </div>
+          <div class="layout-bordered__aside">
+            <div class="layout-bordered__aside-item">
+              <p class="heading-8">Tell</p>
+              <div class="unit flex-row unit-spacing-xxs">
+                <div class="unit-left">
+                  <span
+                    class="icon icon-sm icon-primary material-icons-local_phone"
+                  ></span>
+                </div>
+                <div class="unit-body">
+                  <a href="callto:#">+27 11 776 9141</a>
+                </div>
+              </div>
+            </div>
+            <div class="layout-bordered__aside-item">
+              <p class="heading-8">Phone</p>
+              <div class="unit flex-row unit-spacing-xxs">
+                <div class="unit-left">
+                  <span
+                    class="icon icon-sm icon-primary material-icons-local_phone"
+                  ></span>
+                </div>
+                <div class="unit-body">
+                  <a href="callto:#">+27 72 567 8909</a>
+                </div>
+              </div>
+            </div>
+            <div class="layout-bordered__aside-item">
+              <p class="heading-8">CEO E-mail</p>
+              <div class="unit flex-row unit-spacing-xxs">
+                <div class="unit-left">
+                  <span
+                    class="icon icon-sm icon-primary mdi mdi-email-outline"
+                  ></span>
+                </div>
+                <div class="unit-body">
+                  <a href="mailto:brian@combe90.co.za">brian@combe90.co.za</a>
+                </div>
+              </div>
+            </div>
+            <div class="layout-bordered__aside-item">
+              <p class="heading-8">E-mail</p>
+              <div class="unit flex-row unit-spacing-xxs">
+                <div class="unit-left">
+                  <span
+                    class="icon icon-sm icon-primary mdi mdi-email-outline"
+                  ></span>
+                </div>
+                <div class="unit-body">
+                  <a href="mailto:info@combe90.co.za">info@combe90.co.za</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      class="footer-section parallax-container"
+      data-parallax-img="{% static 'images_previous_site/Fuel-Management-Solutions.jpg' %}"
+    >
+      <div class="parallax-content">
+        <div class="container">
+          <div class="footer-columns">
+            <div class="footer-column">
+              <h4>Contact Us</h4>
+              <ul>
+                <li>Phone: +27 11 776 9141</li>
+                <li>Phone: +27 72 567 8909</li>
+                <li>Email: info@combe90.co.za</li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'about_us' %}">About Us</a></li>
+                <li><a href="{% url 'services' %}">Services</a></li>
+                <li><a href="{% url 'products' %}">Products</a></li>
+                <li><a href="{% url 'contact_us' %}">Contacts</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Follow Us</h4>
+              <ul class="social-icons">
+                <li>
+                  <a
+                    href="https://web.facebook.com/combe90eng/?_rdc=1&_rdr"
+                    target="_blank"
+                    ><img
+                      src="{% static 'images_previous_site/facebook-48.png' %}"
+                      alt="Facebook"
+                  /></a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.linkedin.com/company/combe-90-engineering/"
+                    target="_blank"
+                    ><img
+                      src="{% static 'images_previous_site/linkedin-48.png' %}"
+                      alt="LinkedIn"
+                  /></a>
+                </li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Subscribe Now</h4>
+              <!-- RD Mailform-->
+              <form
+                method="post"
+                class="rd-mailform rd-mailform_sm rd-mailform_inline"
+                data-form-output="form-output-global"
+                data-form-type="subscribe"
+                action="{% url 'subscribe_email' %}"
+              >
+                {% csrf_token %}
+                <div class="form-wrap">
+                  <input
+                    class="form-input"
+                    data-constraints="@Email @Required"
+                    id="footer-form-subscribe-email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter Your E-mail"
+                  />
+                  <button class="button button-secondary" type="submit">
+                    Send
+                  </button>
+                </div>
+              </form>
+              <div class="snackbar" id="form-output-global"></div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; 2024 Combe90. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      $(document).ready(function () {
+        $("#contactForm").on("submit", function (event) {
+          event.preventDefault();
+          $.ajax({
+            type: "POST",
+            url: "{% url 'contact_us' %}",
+            data: {
+              csrfmiddlewaretoken: "{{ csrf_token }}",
+              first_name: $("#contact-first-name").val(),
+              phone: $("#contact-phone").val(),
+              email: $("#contact-email").val(),
+              message: $("#contact-message").val(),
+            },
+            success: function (response) {
+              $("#notification")
+                .removeClass("error")
+                .addClass("notification")
+                .html("Your message has been sent successfully!")
+                .fadeIn()
+                .delay(3000)
+                .fadeOut();
+
+              // Clear the form
+              $("#contactForm")[0].reset();
+            },
+            error: function (response) {
+              $("#notification")
+                .removeClass("notification")
+                .addClass("error")
+                .html(
+                  "There was an error sending your message. Please try again."
+                )
+                .fadeIn()
+                .delay(3000)
+                .fadeOut();
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combe90 - Products</title>
+    {% load static %}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/styles.css' %}"
+    />
+    <style>
+      /* Styles for the search and filters */
+      .search-filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      .search-filter-container input[type="text"],
+      .search-filter-container select {
+        padding: 10px;
+        width: 250px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .search-filter-container label {
+        font-weight: bold;
+      }
+
+      /* Modal styling */
+      #details-modal {
+        display: none; /* Modal is hidden by default */
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #details-modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 800px;
+        width: 90%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      #details-modal-content img {
+        width: 10em;
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+
+      #details-description {
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      #details-modal button {
+        background-color: orange;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #details-modal button:hover {
+        background-color: darkorange;
+      }
+
+      /* Product actions */
+      .product-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .product-actions input {
+        width: 50px;
+        padding: 5px;
+        text-align: center;
+      }
+
+      /* Notification styling */
+      #notification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #4caf50;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        display: none;
+        z-index: 9999;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <img
+          src="{% static 'images/Combe90_logo.jpg' %}"
+          alt="Combe90 Logo"
+          class="logo"
+        />
+        <hr />
+        <!-- Hamburger menu -->
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+        <!-- Navigation menu -->
+        <nav>
+          <ul id="nav-menu">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about_us' %}">About Us</a></li>
+            <li><a href="{% url 'services' %}">Services</a></li>
+            <li><a href="{% url 'products' %}" class="active">Products</a></li>
+            <li><a href="{% url 'contact_us' %}">Contacts</a></li>
+            <li><a href="{% url 'admin_view' %}">Admin</a></li>
+            <li><a href="{% url 'cart' %}">Cart</a></li>
+            <li><a href="{% url 'quotation' %}">Quotation</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <section
+      class="breadcrumbs-custom bg-image"
+      style="
+        background-image: url('{% static 'images_previous_site/Combe-90-fuel-management-system-2.jpg' %}');
+      "
+    >
+      <div class="container">
+        <h2 class="breadcrumbs-custom__title">Products</h2>
+        <ul class="breadcrumbs-custom__path">
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li class="active">Products</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Product Content -->
+    <div class="main-content">
+      <div class="search-filter-container">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search for products..."
+        />
+        <label for="category-filter">Category:</label>
+        <select id="category-filter">
+          <option value="">All Categories</option>
+          <option value="category-a">Category A</option>
+          <option value="category-b">Category B</option>
+          <option value="category-c">Category C</option>
+          <option value="category-d">Category D</option>
+        </select>
+        <label for="price-filter">Price:</label>
+        <select id="price-filter">
+          <option value="">All Prices</option>
+          <option value="0-100">R 0 - R 100</option>
+          <option value="101-1000">R 101 - R 1,000</option>
+          <option value="1001-10000">R 1,001 - R 10,000</option>
+          <option value="10001-100000">R 10,001 - R 100,000</option>
+        </select>
+      </div>
+
+      <div id="notification">Item added to cart!</div>
+      <div id="details-modal">
+        <div id="details-modal-content">
+          <img id="details-image" src="" alt="Product Image" />
+          <p id="details-description"></p>
+          <button onclick="closeModal()">Close</button>
+        </div>
+      </div>
+
+      <div class="product-list">
+        <!-- Loop over products -->
+        {% for product in products %}
+        <div
+          class="product"
+          data-name="{{ product.name }}"
+          data-price="{{ product.price }}"
+          data-category="{{ product.category }}"
+          data-description="{{ product.description }}"
+        >
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+          <h3>{{ product.name }}</h3>
+
+          {% if product.stock_quantity > 0 %}
+          <p>Price: R {{ product.price }}</p>
+          {% else %}
+          <p>Out of Stock</p>
+          {% endif %}
+
+          <div class="product-actions">
+            {% if product.stock_quantity > 0 %}
+            <button onclick="showDetails(this)">Details</button>
+            <button onclick="addToCart(this)">Add to Cart</button>
+            <input type="number" class="quantity-input" value="1" min="1" />
+            {% else %}
+            <p>This product is currently unavailable.</p>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      class="footer-section parallax-container"
+      data-parallax-img="{% static 'images_previous_site/Fuel-Management-Solutions.jpg' %}"
+    >
+      <div class="parallax-content">
+        <div class="container">
+          <div class="footer-columns">
+            <div class="footer-column">
+              <h4>Contact Us</h4>
+              <ul>
+                <li>Phone: +27 11 776 9141</li>
+                <li>Phone: +27 72 567 8909</li>
+                <li>Email: info@combe90.co.za</li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'about_us' %}">About Us</a></li>
+                <li><a href="{% url 'services' %}">Services</a></li>
+                <li><a href="{% url 'products' %}">Products</a></li>
+                <li><a href="{% url 'contact_us' %}">Contacts</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Follow Us</h4>
+              <ul class="social-icons">
+                <li>
+                  <a
+                    href="https://web.facebook.com/combe90eng/?_rdc=1&_rdr"
+                    target="_blank"
+                    ><img
+                      src="{% static 'images_previous_site/facebook-48.png' %}"
+                      alt="Facebook"
+                  /></a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.linkedin.com/company/combe-90-engineering/"
+                    target="_blank"
+                    ><img
+                      src="{% static 'images_previous_site/linkedin-48.png' %}"
+                      alt="LinkedIn"
+                  /></a>
+                </li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Subscribe Now</h4>
+              <!-- RD Mailform-->
+              <form
+                method="post"
+                class="rd-mailform rd-mailform_sm rd-mailform_inline"
+                data-form-output="form-output-global"
+                data-form-type="subscribe"
+                action="{% url 'subscribe_email' %}"
+              >
+                {% csrf_token %}
+                <div class="form-wrap">
+                  <input
+                    class="form-input"
+                    data-constraints="@Email @Required"
+                    id="footer-form-subscribe-email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter Your E-mail"
+                  />
+                  <button class="button button-secondary" type="submit">
+                    Send
+                  </button>
+                </div>
+              </form>
+              <div class="snackbar" id="form-output-global"></div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; 2024 Combe90. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+      // Function to display product details in the modal
+      function showDetails(button) {
+        console.log("Details button clicked"); // Log to verify click event
+
+        // Find the product element associated with the clicked button
+        const productElement = button.closest(".product");
+        const productName = productElement.getAttribute("data-name");
+        const productPrice = productElement.getAttribute("data-price");
+        const productDescription =
+          productElement.getAttribute("data-description");
+        const productImageSrc = productElement
+          .querySelector("img")
+          .getAttribute("src");
+
+        // Ensure the productImageSrc exists and is valid before showing the modal
+        if (!productImageSrc) {
+          console.error("Product image not found.");
+          return;
+        }
+
+        // Update modal content with product details
+        document.getElementById("details-image").src = productImageSrc;
+        document.getElementById("details-description").innerHTML = `
+          <h3>${productName}</h3>
+          <p>Price: R ${productPrice}</p>
+          <p>${productDescription}</p>
+        `;
+
+        // Display the modal
+        document.getElementById("details-modal").style.display = "flex";
+      }
+
+      // Function to close the modal
+      function closeModal() {
+        document.getElementById("details-modal").style.display = "none";
+      }
+
+      // Function to handle adding items to the cart
+      function addToCart(button) {
+        console.log("Add to cart button clicked");
+
+        // Show notification that item has been added to the cart
+        const notification = document.getElementById("notification");
+        notification.style.display = "block";
+
+        // Hide notification after 3 seconds
+        setTimeout(function () {
+          notification.style.display = "none";
+        }, 3000);
+      }
+
+      // Close the modal if user clicks outside of the modal content
+      window.onclick = function (event) {
+        const modal = document.getElementById("details-modal");
+        if (event.target == modal) {
+          closeModal();
+        }
+      };
+
+      // Debug: Make sure showDetails is not being called on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("Page loaded, no modal should appear");
+        // Explicitly hide the modal on page load
+        document.getElementById("details-modal").style.display = "none";
+      });
+    </script>
+  </body>
+</html>

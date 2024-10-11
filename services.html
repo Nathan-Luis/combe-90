@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combe90 - Services</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <style>
+      .service-box {
+        margin-bottom: 30px;
+      }
+
+      .service-box img {
+        height: 200px; /* Set uniform height for images */
+        object-fit: cover; /* Ensures images are not distorted */
+        width: 100%;
+      }
+
+      .service-box p {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        padding: 20px;
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 900px;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      #survey-success-message {
+        display: none;
+        color: green;
+      }
+
+      .service-details {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .service-details img {
+        max-width: 300px;
+        margin-right: 20px;
+      }
+
+      .service-details-description {
+        flex-grow: 1;
+      }
+
+      .survey-form {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .survey-form label {
+        font-weight: bold;
+      }
+
+      .survey-form input,
+      .survey-form textarea,
+      .survey-form button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .survey-form button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      .survey-form button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <img
+          src="{% static 'images/Combe90_logo.jpg' %}"
+          alt="Combe90 Logo"
+          class="logo"
+        />
+        <hr />
+        <!-- Hamburger menu -->
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <nav id="nav-menu">
+          <ul>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about_us' %}">About Us</a></li>
+            <li><a href="{% url 'services' %}" class="active">Services</a></li>
+            <li><a href="{% url 'products' %}">Products</a></li>
+            <li><a href="{% url 'contact_us' %}">Contacts</a></li>
+            <li><a href="{% url 'admin_view' %}">Admin</a></li>
+            <li><a href="{% url 'cart' %}">Cart</a></li>
+            <li><a href="{% url 'quotation' %}">Quotation</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <section
+      class="breadcrumbs-custom bg-image"
+      style="
+        background-image: url('{% static 'images_previous_site/Combe-90-fuel-management-system-2.jpg' %}');
+      "
+    >
+      <div class="container">
+        <h2 class="breadcrumbs-custom__title">Services</h2>
+        <ul class="breadcrumbs-custom__path">
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li class="active">Services</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section section-lg bg-default">
+      <div class="container">
+        <div id="service-content" class="text-center">
+          <h2>Our Services</h2>
+          <div id="all-services">
+            {% for service in services %}
+            <div class="service-box" id="service-{{ service.id }}">
+              <h4>{{ service.name }}</h4>
+              <a href="#service-{{ service.id }}">
+                <img src="{{ service.image.url }}" alt="{{ service.name }}" />
+              </a>
+              <p>{{ service.description }}</p>
+              <a
+                href="javascript:void(0);"
+                class="button button-primary read-more"
+                data-service="{{ service.id }}"
+                >Read More</a
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal for Service Details and Survey Request -->
+    <div id="service-details-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="service-details">
+          <img id="service-image" src="" alt="Service Image" />
+          <div class="service-details-description">
+            <h2 id="service-title"></h2>
+            <p id="service-description"></p>
+          </div>
+        </div>
+
+        <!-- Survey Request Form -->
+        <form
+          id="survey-request-form"
+          class="survey-form"
+          action="{% url 'submit_survey_request' %}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <label for="name">Your Name:</label>
+          <input type="text" id="name" name="name" required />
+
+          <label for="email">Your Email:</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="phone">Your Phone Number:</label>
+          <input type="tel" id="phone" name="phone" required />
+
+          <label for="survey_type">Survey Type:</label>
+          <input type="text" id="survey_type" name="survey_type" required />
+
+          <label for="survey_address">Survey Address:</label>
+          <input
+            type="text"
+            id="survey-address"
+            name="survey_address"
+            required
+          />
+
+          <label for="geo-location">Use Current Location:</label>
+          <button type="button" id="use-location">Use Geo-Location</button>
+          <input
+            type="text"
+            id="geo-location"
+            name="geo_location"
+            placeholder="Latitude, Longitude"
+          />
+
+          <label for="additional-info"
+            >Additional Information (optional):</label
+          >
+          <textarea
+            id="additional-info"
+            name="additional_info"
+            rows="4"
+          ></textarea>
+
+          <label for="images">Upload Images (Max 10):</label>
+          <input type="file" id="images" name="images" multiple />
+
+          <button type="submit">Request Survey</button>
+        </form>
+      </div>
+    </div>
+    <!-- Footer Section (copied from the index page) -->
+    <footer
+      class="footer-section"
+      style="
+        background-image: url('{% static 'images_previous_site/Fuel-Management-Solutions.jpg' %}');
+      "
+    >
+      <div class="parallax-content">
+        <div class="container">
+          <div class="footer-columns">
+            <div class="footer-column">
+              <h4>Contact Us</h4>
+              <ul>
+                <li>Phone: +27 11 776 9141</li>
+                <li>Phone: +27 72 567 8909</li>
+                <li>Email: info@combe90.co.za</li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'about_us' %}">About Us</a></li>
+                <li>
+                  <a href="{% url 'services' %}" class="active">Services</a>
+                </li>
+                <li><a href="{% url 'products' %}">Products</a></li>
+                <li><a href="{% url 'contact_us' %}">Contacts</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Follow Us</h4>
+              <ul class="social-icons">
+                <li>
+                  <a
+                    href="https://web.facebook.com/combe90eng/?_rdc=1&_rdr"
+                    target="_blank"
+                  >
+                    <img
+                      src="{% static 'images_previous_site/facebook-48.png' %}"
+                      alt="Facebook"
+                    />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.linkedin.com/company/combe-90-engineering/"
+                    target="_blank"
+                  >
+                    <img
+                      src="{% static 'images_previous_site/linkedin-48.png' %}"
+                      alt="LinkedIn"
+                    />
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4>Subscribe Now</h4>
+              <!-- Subscription Form -->
+              <form
+                method="post"
+                class="rd-mailform rd-mailform_sm rd-mailform_inline"
+                action=""
+              >
+                {% csrf_token %}
+                <div class="form-wrap">
+                  {{ form.email }}
+                  <label class="form-label" for="footer-form-subscribe-email"
+                    >Enter Your E-mail</label
+                  >
+                </div>
+                <button class="button button-secondary" type="submit">
+                  Send
+                </button>
+              </form>
+              <div class="snackbar" id="form-output-global"></div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; 2024 Combe90. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.getElementById("service-details-modal");
+        var closeModalButton = document.getElementsByClassName("close")[0];
+        var modalTitle = document.getElementById("service-title");
+        var modalDescription = document.getElementById("service-description");
+        var modalImage = document.getElementById("service-image");
+
+        // Show modal when "Read More" is clicked
+        const readMoreButtons = document.querySelectorAll(".read-more");
+        readMoreButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            const serviceId = this.getAttribute("data-service");
+
+            // Fetch service details
+            fetch(`/service-details/${serviceId}/`)
+              .then((response) => response.json())
+              .then((data) => {
+                modalTitle.textContent = data.name;
+                modalDescription.textContent = data.description;
+                modalImage.src = data.image_url;
+                modal.style.display = "block";
+              })
+              .catch((error) => console.error("Error:", error));
+          });
+        });
+
+        // Close modal when close button is clicked
+        closeModalButton.onclick = function () {
+          modal.style.display = "none";
+        };
+
+        // Close modal if user clicks outside the modal
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        };
+
+        // Geolocation button handler
+        document
+          .getElementById("use-location")
+          .addEventListener("click", function () {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(function (position) {
+                document.getElementById("geo-location").value =
+                  position.coords.latitude + ", " + position.coords.longitude;
+              });
+            } else {
+              alert("Geolocation is not supported by this browser.");
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
